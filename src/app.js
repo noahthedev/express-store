@@ -76,7 +76,7 @@ app.post('/user', (req, res) => {
     'Ogden Curling Club',
     'Park City Curling Club',
     'Salt Lake City Curling Club',
-    'Utah Olympic Oval Curling Club'
+    'Utah Olympic Oval Curling Club' 
   ];  
 
   if (!clubs.includes(favoriteClub)) {
@@ -85,7 +85,7 @@ app.post('/user', (req, res) => {
       .send('Not a valid club');
   }
   
-  // const id = 
+  const id = uuid();  
   const newUser = {
     id,
     username,
