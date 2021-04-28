@@ -4,6 +4,7 @@ const morgan = require('morgan')
 const cors = require('cors')
 const helmet = require('helmet')
 const { NODE_ENV } = require('./config')
+const { v4: uuid } = require('uuid')
 
 const app = express()
 
@@ -32,7 +33,7 @@ const users = [
 ]
 
 app.post('/user', (req, res) => {
-  const { username, password, favoriteClub, newsletter=false } 
+  const { username, password, favoriteClub, newsLetter } 
   = req.body;
 
   if (!username) {
@@ -96,12 +97,31 @@ app.post('/user', (req, res) => {
 
   users.push(newUser);
 
-  res.send('All validation passed');
+  res
+    .status(201)
+    .json({id: id});
+
+})
+
+app.get('/user', (req, res) => {
+  res
+    .json(users);
 });
 
-app.get('/', (req, res) => {
-  res
-    .send('A GET request');
+app.delete('/user/:userId', (req, res) => {
+  const { userId } = req.params;
+
+  const index = users.findIndex(u => u.id === userId);
+  
+  if (index === -1 ) {
+    return res
+      .status(404)
+      .send('User not found');
+  }
+
+  users.splice(index, 1);
+
+  res.send('Deleted');
 });
 
 app.use(function errorHandler(error, req, res, next) {
